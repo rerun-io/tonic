@@ -110,9 +110,10 @@ where
             // Return HTTP 400 for all other requests.
             RequestKind::Other(_) => {
                 debug!(kind = "other h1", content_type = ?req.headers().get(header::CONTENT_TYPE));
-
                 ResponseFuture {
-                    case: Case::immediate(StatusCode::BAD_REQUEST),
+                    case: Case::Other {
+                        future: self.inner.call(req.map(Body::new)),
+                    },
                 }
             }
         }
