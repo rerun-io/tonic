@@ -96,10 +96,10 @@ where
                 }
             }
 
-            // All http/2 requests that are not grpc-web are passed through to the inner service,
-            // whatever they are.
             RequestKind::Other(Version::HTTP_2) => {
                 debug!(kind = "other h2", content_type = ?req.headers().get(header::CONTENT_TYPE));
+                // Ask Clement what this is and why we need it as Rerun.
+                // According to @teh-cmc this is somehow related to https://github.com/hyperium/tonic/issues/1383
                 ResponseFuture {
                     case: Case::Other {
                         future: self.inner.call(req.map(Body::new)),
